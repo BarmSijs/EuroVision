@@ -16,7 +16,7 @@ class CountriesController extends Controller
         $countries = $this->model->all();
         $this->render('countries/index', ['countries' => $countries, 'name' => 'Landen overzicht']);
     }
-
+/*
     public function create()
     {
         $this->render('countries/create', ['title' => 'Nieuw drankje']);
@@ -64,5 +64,5 @@ class CountriesController extends Controller
         $this->model->delete($id);
         header('Location: /EuroVision/public/drinks/index');
         exit;
-    }
+    }*/
 }

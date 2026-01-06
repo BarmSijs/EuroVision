@@ -8,5 +8,6 @@
 <body>
   <h1><?= htmlspecialchars($title) ?></h1>
   <p>Dit is een eenvoudige startpagina.</p>
+  <a href="<?= BASE_URL ?>/countries">Bekijk landen</a>
 </body>
 </html>

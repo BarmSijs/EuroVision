@@ -10,3 +10,9 @@ Korte uitleg en instructies:
 - DB: pas `app/db.php` aan met je MySQL-instellingen.
 
 Voorbeeld: bezoek `http://localhost/EuroVision/public/` om de startpagina te zien.
+
+
+
+git remote add origin https://github.com/BarmSijs/EuroVision.git
+git branch -M main
+git push -u origin main
