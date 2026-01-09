@@ -18,7 +18,7 @@ class Countrie extends Model
         $row = $stmt->fetch();
         return $row ?: null;
     }
-    /*
+    
     public function create(array $data): bool
     {
         $stmt = $this->db->prepare("INSERT INTO `{$this->table}` (name, price, description) VALUES (:name, :price, :description)");
@@ -46,5 +46,5 @@ class Countrie extends Model
         return $stmt->execute(['id' => $id]);
     }
         
-    */
+    
 }

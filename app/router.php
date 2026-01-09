@@ -1,25 +1,32 @@
 <?php
+
+declare(strict_types=1);
+
 class Router
 {
-    public function dispatch()
+    public function dispatch(): void
     {
+        // Volledige URI zonder query string
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $base = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-        $path = trim(substr($uri, strlen($base)), '/');
+        $path = trim(substr($uri, strlen(BASE_PATH)), '/');
 
-        // Ensure $parts is always defined as an array
-        $parts = [];
-
+        // Default route
         if ($path === '') {
             $controllerName = 'HomeController';
             $action = 'index';
+            $params = [];
         } else {
+
             $parts = explode('/', $path);
-            $controllerName = ucfirst(array_shift($parts)) . 'Controller';
-            $action = array_shift($parts) ?: 'index';
+
+            $controllerName = ucfirst(end($parts)) . 'Controller';
+            $action = 'index';
+            $params = [];
         }
 
+        // Controller bestand
         $controllerFile = __DIR__ . '/controllers/' . $controllerName . '.php';
+
         if (!file_exists($controllerFile)) {
             http_response_code(404);
             echo 'Controller not found';
@@ -42,8 +49,7 @@ class Router
             return;
         }
 
-        // Pass any remaining URL segments as parameters to the action
-        $params = is_array($parts) ? $parts : [];
+        // Call controller action with parameters
         call_user_func_array([$controller, $action], $params);
     }
 }
