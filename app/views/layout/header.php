@@ -9,3 +9,15 @@
 </head>
 
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="<?= BASE_PATH ?>/home">Home</a></li>
+                <li><a href="/BramS/EuroVision/Countries">Countries</a></li>
+                <li><a href="/BramS/EuroVision/Events">Events</a></li>
+                <li><a href="/BramS/EuroVision/Participants">Participants</a></li>
+                <li><a href="/BramS/EuroVision/Scores">Scores</a></li>
+                <li><a href="/BramS/EuroVision/Users">Users</a></li>
+            </ul>
+        </nav>
+    </header>

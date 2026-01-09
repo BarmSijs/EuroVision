@@ -5,6 +5,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $this->render('home', ['title' => 'Welkom bij MVC']);
+        $this->render('home', ['title' => 'EuroVision Home']);
     }
 }
