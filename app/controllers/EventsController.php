@@ -43,21 +43,93 @@ class EventsController extends Controller
         $data = [
             'year' => $_POST['year'] ?? null,
             'name' => $_POST['name'] ?? '',
-            'winner_participant_id' => $_POST['winner_participant_id'] ?? null,
+            'winner_participant_id' => null,
         ];
         $eventId = $this->model->create($data);
 
-        // Voeg geselecteerde landen als deelnemers toe
-        if (isset($_POST['countries']) && !empty($eventId)) {
-            foreach ($_POST['countries'] as $countryId) {
+        // Voeg geselecteerde landen + artiest/lied als deelnemers toe
+        if (isset($_POST['participants']) && !empty($eventId)) {
+            foreach ($_POST['participants'] as $countryId => $participantData) {
+                // Skip als country_id niet ingesteld is (checkbox niet aangevinkt)
+                if (empty($participantData['country_id'])) {
+                    continue;
+                }
+
                 $this->participantModel->create([
                     'event_id' => $eventId,
                     'country_id' => (int)$countryId,
+                    'artist' => $participantData['artist'] ?? '',
+                    'song' => $participantData['song'] ?? '',
                 ]);
             }
         }
 
-        header('Location: /EuroVision/public/events/index');
+        // Redirect naar participants overzicht
+        header('Location: /BramS/EuroVision/events/participants/' . $eventId);
+        exit;
+    }
+
+    public function participants($eventId = null)
+    {
+        $eventId = (int)$eventId;
+        $event = $this->model->find($eventId);
+        if (!$event) {
+            echo 'Event niet gevonden';
+            return;
+        }
+        $participants = $this->participantModel->getWithCountries($eventId);
+        $this->render('events/participants', [
+            'event' => $event,
+            'participants' => $participants,
+            'title' => 'Deelnemers - ' . $event['name'],
+            'countrieModel' => $this->countrieModel
+        ]);
+    }
+
+    public function addParticipant($eventId = null)
+    {
+        $eventId = (int)$eventId;
+        $event = $this->model->find($eventId);
+        if (!$event) {
+            echo 'Event niet gevonden';
+            return;
+        }
+
+        $data = [
+            'event_id' => $eventId,
+            'country_id' => $_POST['country_id'] ?? null,
+            'artist' => $_POST['artist'] ?? '',
+            'song' => $_POST['song'] ?? '',
+        ];
+        $this->participantModel->create($data);
+
+        header('Location: /BramS/EuroVision/events/participants/' . $eventId);
+        exit;
+    }
+
+    public function selectWinner($id = null)
+    {
+        $id = (int)$id;
+        $event = $this->model->find($id);
+        if (!$event) {
+            echo 'Event niet gevonden';
+            return;
+        }
+        $participants = $this->participantModel->getWithCountries($id);
+        $this->render('events/selectWinner', [
+            'event' => $event,
+            'participants' => $participants,
+            'title' => 'Winnaar selecteren - ' . $event['name']
+        ]);
+    }
+
+    public function setWinner($eventId = null, $participantId = null)
+    {
+        $eventId = (int)$eventId;
+        $participantId = (int)$participantId;
+
+        $this->model->update($eventId, ['winner_participant_id' => $participantId]);
+        header('Location: /BramS/EuroVision/events/index');
         exit;
     }
 
@@ -81,7 +153,7 @@ class EventsController extends Controller
             'winner_participant_id' => $_POST['winner_participant_id'] ?? null,
         ];
         $this->model->update($id, $data);
-        header('Location: /EuroVision/public/events/index');
+        header('Location: /BramS/EuroVision/events/index');
         exit;
     }
 
@@ -89,7 +161,7 @@ class EventsController extends Controller
     {
         $id = (int)$id;
         $this->model->delete($id);
-        header('Location: /EuroVision/public/events/index');
+        header('Location: /BramS/EuroVision/events/index');
         exit;
     }
 }

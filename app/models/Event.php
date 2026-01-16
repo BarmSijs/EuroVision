@@ -20,14 +20,15 @@ class Event extends Model
         return $row ?: null;
     }
 
-    public function create(array $data): bool
+    public function create(array $data): ?int
     {
         $stmt = $this->db->prepare("INSERT INTO `{$this->table}` (year, name, winner_participant_id) VALUES (:year, :name, :winner)");
-        return $stmt->execute([
+        $success = $stmt->execute([
             'year' => $data['year'] ?? null,
             'name' => $data['name'] ?? '',
             'winner' => $data['winner_participant_id'] ?? null,
         ]);
+        return $success ? $this->db->lastInsertId() : null;
     }
 
     public function update(int $id, array $data): bool
@@ -83,5 +84,4 @@ class Event extends Model
         $row = $stmt->fetch();
         return $row ?: [];
     }
-
 }

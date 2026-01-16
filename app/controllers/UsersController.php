@@ -31,7 +31,7 @@ class UsersController extends Controller
             'role' => $_POST['role'] ?? 'user',
         ];
         $this->model->create($data);
-        header('Location: /EuroVision/public/users/index');
+        header('Location: /BramS/EuroVision/users/index');
         exit;
     }
 
@@ -56,7 +56,7 @@ class UsersController extends Controller
             'role' => $_POST['role'] ?? 'user',
         ];
         $this->model->update($id, $data);
-        header('Location: /EuroVision/public/users/index');
+        header('Location: /BramS/EuroVision/users/index');
         exit;
     }
 
@@ -64,7 +64,7 @@ class UsersController extends Controller
     {
         $id = (int)$id;
         $this->model->delete($id);
-        header('Location: /EuroVision/public/users/index');
+        header('Location: /BramS/EuroVision/users/index');
         exit;
     }
 }

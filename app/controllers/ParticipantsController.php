@@ -31,7 +31,7 @@ class ParticipantsController extends Controller
             'song' => $_POST['song'] ?? '',
         ];
         $this->model->create($data);
-        header('Location: /EuroVision/public/participants/index');
+        header('Location: /BramS/EuroVision/participants/index');
         exit;
     }
 
@@ -49,14 +49,20 @@ class ParticipantsController extends Controller
     public function update($id = null)
     {
         $id = (int)$id;
+        $participant = $this->model->find($id);
+
         $data = [
-            'event_id' => $_POST['event_id'] ?? null,
-            'country_id' => $_POST['country_id'] ?? null,
             'artist' => $_POST['artist'] ?? '',
             'song' => $_POST['song'] ?? '',
         ];
         $this->model->update($id, $data);
-        header('Location: /EuroVision/public/participants/index');
+
+        // Als dit vanuit events komt, terug naar het event
+        if (!empty($participant['event_id'])) {
+            header('Location: /BramS/EuroVision/events/participants/' . $participant['event_id']);
+        } else {
+            header('Location: /BramS/EuroVision/participants/index');
+        }
         exit;
     }
 
@@ -64,7 +70,7 @@ class ParticipantsController extends Controller
     {
         $id = (int)$id;
         $this->model->delete($id);
-        header('Location: /EuroVision/public/participants/index');
+        header('Location: /BramS/EuroVision/participants/index');
         exit;
     }
 }

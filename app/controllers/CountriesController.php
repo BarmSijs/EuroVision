@@ -30,7 +30,7 @@ class CountriesController extends Controller
             'description' => $_POST['description'] ?? null,
         ];
         $this->model->create($data);
-        header('Location: /EuroVision/public/drinks/index');
+        header('Location: /BramS/EuroVision/countries/index');
         exit;
     }
 
@@ -54,7 +54,7 @@ class CountriesController extends Controller
             'description' => $_POST['description'] ?? null,
         ];
         $this->model->update($id, $data);
-        header('Location: /EuroVision/public/drinks/index');
+        header('Location: /BramS/EuroVision/countries/index');
         exit;
     }
 
@@ -62,7 +62,7 @@ class CountriesController extends Controller
     {
         $id = (int)$id;
         $this->model->delete($id);
-        header('Location: /EuroVision/public/drinks/index');
+        header('Location: /BramS/EuroVision/countries/index');
         exit;
     }
 }

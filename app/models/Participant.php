@@ -42,10 +42,22 @@ class Participant extends Model
         $fields = [];
         $params = ['id' => $id];
 
-        if (isset($data['event_id'])) { $fields[] = 'event_id = :event'; $params['event'] = $data['event_id']; }
-        if (isset($data['country_id'])) { $fields[] = 'country_id = :country'; $params['country'] = $data['country_id']; }
-        if (isset($data['artist'])) { $fields[] = 'artist = :artist'; $params['artist'] = $data['artist']; }
-        if (isset($data['song'])) { $fields[] = 'song = :song'; $params['song'] = $data['song']; }
+        if (isset($data['event_id'])) {
+            $fields[] = 'event_id = :event';
+            $params['event'] = $data['event_id'];
+        }
+        if (isset($data['country_id'])) {
+            $fields[] = 'country_id = :country';
+            $params['country'] = $data['country_id'];
+        }
+        if (isset($data['artist'])) {
+            $fields[] = 'artist = :artist';
+            $params['artist'] = $data['artist'];
+        }
+        if (isset($data['song'])) {
+            $fields[] = 'song = :song';
+            $params['song'] = $data['song'];
+        }
 
         if (empty($fields)) return false;
 
@@ -58,5 +70,24 @@ class Participant extends Model
     {
         $stmt = $this->db->prepare("DELETE FROM `{$this->table}` WHERE id = :id");
         return $stmt->execute(['id' => $id]);
+    }
+
+    public function getWithCountries(int $eventId): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT 
+                p.id,
+                p.event_id,
+                p.country_id,
+                p.artist,
+                p.song,
+                c.name AS country_name
+            FROM participants p
+            LEFT JOIN countries c ON p.country_id = c.id
+            WHERE p.event_id = :event
+            ORDER BY c.name
+        ");
+        $stmt->execute(['event' => $eventId]);
+        return $stmt ? $stmt->fetchAll() : [];
     }
 }

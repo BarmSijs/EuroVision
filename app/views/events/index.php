@@ -1,4 +1,4 @@
-<div style="display: flex; justify-content: space-between; align-items: center;">
+<div style="display: flex;; align-items: center;">
     <h1>Events</h1>
     <a href="/BramS/EuroVision/events/create" style="font-size: 30px; text-decoration: none;">➕</a>
 </div>
@@ -18,15 +18,16 @@
                 <td><?= htmlspecialchars($event['year']) ?></td>
                 <td><?= htmlspecialchars($event['name']) ?></td>
                 <td>
-                    <?php if (!empty($event['winner'])): ?>
+                    <?php if (!empty($event['winner']) && !empty($event['winner']['artist'])): ?>
                         <strong><?= htmlspecialchars($event['winner']['artist']) ?></strong><br>
-                        <?= htmlspecialchars($event['winner']['song']) ?>
+                        <?= htmlspecialchars($event['winner']['song'] ?? '') ?>
                     <?php else: ?>
                         Geen winnaar
                     <?php endif; ?>
                 </td>
                 <td>
-                    <a href="/BramS/EuroVision/events/edit/<?= $event['id'] ?>">Bewerk</a>
+                    <a href="/BramS/EuroVision/events/participants/<?= $event['id'] ?>">Bewerk</a>
+                    <a href="/BramS/EuroVision/scores/scoreEvent/<?= $event['id'] ?>">Scores</a>
                     <a href="/BramS/EuroVision/events/delete/<?= $event['id'] ?>">Verwijder</a>
                 </td>
             </tr>
