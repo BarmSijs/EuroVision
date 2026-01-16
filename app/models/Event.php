@@ -35,9 +35,18 @@ class Event extends Model
         $fields = [];
         $params = ['id' => $id];
 
-        if (isset($data['year'])) { $fields[] = 'year = :year'; $params['year'] = $data['year']; }
-        if (isset($data['name'])) { $fields[] = 'name = :name'; $params['name'] = $data['name']; }
-        if (array_key_exists('winner_participant_id', $data)) { $fields[] = 'winner_participant_id = :winner'; $params['winner'] = $data['winner_participant_id']; }
+        if (isset($data['year'])) {
+            $fields[] = 'year = :year';
+            $params['year'] = $data['year'];
+        }
+        if (isset($data['name'])) {
+            $fields[] = 'name = :name';
+            $params['name'] = $data['name'];
+        }
+        if (array_key_exists('winner_participant_id', $data)) {
+            $fields[] = 'winner_participant_id = :winner';
+            $params['winner'] = $data['winner_participant_id'];
+        }
 
         if (empty($fields)) return false;
 
@@ -58,4 +67,21 @@ class Event extends Model
         $stmt->execute(['event' => $eventId]);
         return $stmt ? $stmt->fetchAll() : [];
     }
+
+    public function winnerEvent(int $eventId): array
+    {
+        $stmt = $this->db->prepare("SELECT
+            e.year,
+            e.name AS event_name,
+            p.artist,
+            p.song
+            FROM events e
+            LEFT JOIN participants p
+            ON e.winner_participant_id = p.id
+            WHERE e.id = :event LIMIT 1");
+        $stmt->execute(['event' => $eventId]);
+        $row = $stmt->fetch();
+        return $row ?: [];
+    }
+
 }

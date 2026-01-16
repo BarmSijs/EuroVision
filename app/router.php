@@ -16,12 +16,12 @@ class Router
             $action = 'index';
             $params = [];
         } else {
-
             $parts = explode('/', $path);
 
-            $controllerName = ucfirst(end($parts)) . 'Controller';
-            $action = 'index';
-            $params = [];
+            // Extract controller, action, and parameters
+            $controllerName = ucfirst($parts[0] ?? 'home') . 'Controller';
+            $action = $parts[1] ?? 'index';
+            $params = array_slice($parts, 2);
         }
 
         // Controller bestand
@@ -29,7 +29,7 @@ class Router
 
         if (!file_exists($controllerFile)) {
             http_response_code(404);
-            echo 'Controller not found';
+            echo 'Controller not found: ' . $controllerName;
             return;
         }
 
@@ -37,7 +37,7 @@ class Router
 
         if (!class_exists($controllerName)) {
             http_response_code(500);
-            echo 'Controller class missing';
+            echo 'Controller class missing: ' . $controllerName;
             return;
         }
 
@@ -45,7 +45,7 @@ class Router
 
         if (!method_exists($controller, $action)) {
             http_response_code(404);
-            echo 'Action not found';
+            echo 'Action not found: ' . $action;
             return;
         }
 
